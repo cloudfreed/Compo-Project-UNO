@@ -15,7 +15,7 @@ struct player {
     int score;
     vector<string> card;
 };
-//vector<player> = playerpool;
+vector<player> playerpool;
 //player playerpool;
 
 void createdeck(vector<string> &);
@@ -36,8 +36,14 @@ int main()
     cin >> nplayer;
     cardmanager(nplayer,deck);
     for(int i=0;i<=nplayer;i++){
-        cout << "Card of player " <<i <<" = " ;
+        cout << "eiei2";
+        cout << "Card of player " <<i <<" = ";
+        for(int j= 0;j<playerpool[i].card.size();j++){
+            cout << "eiei";
+            cout << playerpool[i].card[j] << " ";
+        }
     }
+    cout << "eiei";
 
     return 0;
 }
@@ -104,11 +110,14 @@ void random(vector<string> &d){
     }
 }
 
-/*void cardmanager(int n,vector<string> &d){
+void cardmanager(int n,vector<string> &d){
+    cout << "eiei1 n = " <<n <<endl;
     for(int i=0;i<=n;i++){
+        cout << "eiei1.1\n";
         for(int j=0;j<7;j++){
-            player[i].card.push_back(d.back());
+            cout << "eiei1.2\n";
+            playerpool[i].card.push_back("sd");
             d.pop_back();
         }
     }
-}*/
+}
