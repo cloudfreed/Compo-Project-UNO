@@ -22,10 +22,11 @@ void createdeck(vector<string> &);
 void showdeck(vector<string>);
 void random(vector<string> &);
 void cardmanager(int,vector<string> &);
-//void showpcard(int,playerpool[]);
+int gameplay(vector<player> &,vector<string> &,int);
 
 int main()
 {
+    int firstplayer;
     deck.clear();
     createdeck(deck);
     showdeck(deck);
@@ -36,15 +37,16 @@ int main()
     cin >> nplayer;
     cardmanager(nplayer,deck);
     for(int i=0;i<=nplayer;i++){
-        cout << "eiei2";
         cout << "Card of player " <<i <<" = ";
         for(int j= 0;j<playerpool[i].card.size();j++){
-            cout << "eiei";
-            cout << playerpool[i].card[j] << " ";
+            cout << playerpool[i].card[j] << "\t";
         }
+        cout <<endl;
     }
-    cout << "eiei";
-//test
+    firstplayer = rand()%(nplayer+1);
+    cout << "first player is = player [" <<firstplayer <<"]"<<endl;
+    gameplay(playerpool,deck,firstplayer);
+
     return 0;
 }
 
@@ -111,13 +113,40 @@ void random(vector<string> &d){
 }
 
 void cardmanager(int n,vector<string> &d){
-    cout << "eiei1 n = " <<n <<endl;
+    player playertemp;
     for(int i=0;i<=n;i++){
-        cout << "eiei1.1\n";
         for(int j=0;j<7;j++){
-            cout << "eiei1.2\n";
-            playerpool[i].card.push_back("sd");
+            playertemp.card.push_back(d.back());
             d.pop_back();
         }
+        playerpool.push_back(playertemp);
+        playertemp.card.clear();
     }
+}
+
+int gameplay(vector<player> &pool,vector<string> &d,int n){
+    bool reverse=0;
+    //0=clockwise
+    //1=antiClockwise
+    vector<string> table;
+    table.push_back(d.back());
+    d.pop_back;
+    int thisplayer=n;
+    int ccard;
+
+    while(true){
+        while(reverse){
+            cout << "Last Card on the table is = " <<table.back();
+            cout << "Player " << thisplayer <<" turn!!!";
+            cout << "Choose your card number";
+            cin >> ccard;
+
+        }
+        while(reverse){
+            
+        }
+    }
+
+
+
 }
