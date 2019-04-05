@@ -14,6 +14,8 @@ int randomnumber = 2000;
 struct player {
     int score;
     vector<string> card;
+    vector<char> number;
+    vector<char> colour; 
 };
 vector<player> playerpool;
 //player playerpool;
@@ -23,6 +25,9 @@ void showdeck(vector<string>);
 void random(vector<string> &);
 void cardmanager(int,vector<string> &);
 int gameplay(vector<player> &,vector<string> &,int);
+void checktable(vector<string> &);
+void showdecksize(vector<string> &);
+void showcardonhand(vector<player> &,int);
 
 int main()
 {
@@ -36,15 +41,10 @@ int main()
     cout << "How many player do you want to play with?\nInput = ";
     cin >> nplayer;
     cardmanager(nplayer,deck);
-    for(int i=0;i<=nplayer;i++){
-        cout << "Card of player " <<i <<" = ";
-        for(int j= 0;j<playerpool[i].card.size();j++){
-            cout << playerpool[i].card[j] << "\t";
-        }
-        cout <<endl;
-    }
+    showcardonhand(playerpool,nplayer);
+    showdecksize(deck);
     firstplayer = rand()%(nplayer+1);
-    cout << "first player is = player [" <<firstplayer <<"]"<<endl;
+    cout << "First player is = player [" <<firstplayer <<"]"<<endl;
     gameplay(playerpool,deck,firstplayer);
 
     return 0;
@@ -98,9 +98,9 @@ void showdeck(vector<string> deck){
     for(int i=0 ;i<deck.size();i++){
         cout << deck[i] <<endl;
     }
-    cout << "Number of card is = " << deck.size() <<endl;
+    showdecksize(deck);
 }
-
+//test123asdads
 void random(vector<string> &d){
     int count=0;
     string temp;
@@ -125,28 +125,52 @@ void cardmanager(int n,vector<string> &d){
 }
 
 int gameplay(vector<player> &pool,vector<string> &d,int n){
-    bool reverse=0;
+    bool reverse=1;
     //0=clockwise
     //1=antiClockwise
     vector<string> table;
     table.push_back(d.back());
-    d.pop_back;
+    d.pop_back();
     int thisplayer=n;
     int ccard;
+    bool exitt=1;
 
-    while(true){
+    while(exitt){
         while(reverse){
-            cout << "Last Card on the table is = " <<table.back();
-            cout << "Player " << thisplayer <<" turn!!!";
-            cout << "Choose your card number";
+            checktable(table);
+            cout << "Player " << thisplayer <<" turn!!!"<<endl;
+            cout << "Choose your card number = ";
             cin >> ccard;
+            table.push_back(pool[thisplayer].card[ccard-1]);
+            pool[thisplayer].card[ccard+1].erase();
+            checktable(table);
+            showdecksize(d);
 
-        }
-        while(reverse){
             
+
+
+
         }
     }
 
 
 
+}
+
+void checktable(vector<string> &t){
+    cout << "Last Card on the table is = " <<t.back() <<endl;
+}
+
+void showdecksize(vector<string> &d){
+    cout << "Number of card left in the deck is = " << d.size() <<endl;
+}
+
+void showcardonhand(vector<player> &playerpool,int nplayer){
+     for(int i=0;i<=nplayer;i++){
+        cout << "Card of player " <<i <<" = ";
+        for(int j= 0;j<playerpool[i].card.size();j++){
+            cout << playerpool[i].card[j] << "\t";
+        }
+        cout <<endl;
+    }
 }
