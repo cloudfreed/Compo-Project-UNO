@@ -5,12 +5,13 @@
 #include<bits/stdc++.h>
 #include<time.h>
 #include<stdlib.h>  
+#include<cstring>
 
 using namespace std;
 
 vector<string> deck,P1,P2,P3,P4;
 int nplayer=4;
-int randomnumber = 2000;
+int randomnumber = 100;
 struct player {
     int score;
     vector<string> card;
@@ -24,10 +25,11 @@ void createdeck(vector<string> &);
 void showdeck(vector<string>);
 void random(vector<string> &);
 void cardmanager(int,vector<string> &);
-int gameplay(vector<player> &,vector<string> &,int);
+void gameplay(vector<player> &,vector<string> &,int);
 void checktable(vector<string> &);
 void showdecksize(vector<string> &);
 void showcardonhand(vector<player> &,int);
+bool checkwrong(string,string);
 
 int main()
 {
@@ -124,7 +126,7 @@ void cardmanager(int n,vector<string> &d){
     }
 }
 
-int gameplay(vector<player> &pool,vector<string> &d,int n){
+void gameplay(vector<player> &pool,vector<string> &d,int n){
     bool reverse=1;
     //0=clockwise
     //1=antiClockwise
@@ -134,13 +136,19 @@ int gameplay(vector<player> &pool,vector<string> &d,int n){
     int thisplayer=n;
     int ccard;
     bool exitt=1;
+    bool x=true;
 
     while(exitt){
         while(reverse){
             checktable(table);
             cout << "Player " << thisplayer <<" turn!!!"<<endl;
-            cout << "Choose your card number = ";
-            cin >> ccard;
+            do {
+                cout << "Choose your card number = ";
+                cin >> ccard;
+                x = checkwrong(pool[thisplayer].card[ccard-1],table.back());
+                if(x) cout << "Wrong Card!!!";
+            }
+            while(x);
             table.push_back(pool[thisplayer].card[ccard-1]);
             pool[thisplayer].card[ccard-1].erase();
             //pool[thisplayer].card.shrink_to_fit();
@@ -173,4 +181,23 @@ void showcardonhand(vector<player> &playerpool,int nplayer){
         }
         cout <<endl;
     }
+}
+
+bool checkwrong(string p,string t){
+    char textP[p.size()+1];
+    char textT[t.size()+1];
+    strcpy(textP,p.c_str());
+    strcpy(textT,t.c_str());
+    char format[] = "%[^:]:%s";
+    char type1[1],type2[1];
+    char value1[5],value2[5];
+    
+    sscanf(textT,format,type1,value1);
+    sscanf(textP,format,type2,value2);
+
+    cout << textT << "  " << type1 << "  " << value1 << endl;
+    cout << textP << "  " << type2 << "  " << value2 << endl;
+    
+        
+    return false;
 }
