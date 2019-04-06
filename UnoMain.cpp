@@ -34,10 +34,10 @@ int main()
     int firstplayer;
     deck.clear();
     createdeck(deck);
-    showdeck(deck);
+    //showdeck(deck);
     srand (time(NULL));
     random(deck);
-    showdeck(deck);
+    //showdeck(deck);
     cout << "How many player do you want to play with?\nInput = ";
     cin >> nplayer;
     cardmanager(nplayer,deck);
@@ -100,7 +100,7 @@ void showdeck(vector<string> deck){
     }
     showdecksize(deck);
 }
-//test123asdads
+
 void random(vector<string> &d){
     int count=0;
     string temp;
@@ -142,13 +142,13 @@ int gameplay(vector<player> &pool,vector<string> &d,int n){
             cout << "Choose your card number = ";
             cin >> ccard;
             table.push_back(pool[thisplayer].card[ccard-1]);
-            pool[thisplayer].card[ccard+1].erase();
+            pool[thisplayer].card[ccard-1].erase();
+            //pool[thisplayer].card.shrink_to_fit();
             checktable(table);
             showdecksize(d);
-
-            
-
-
+            showcardonhand(playerpool,nplayer);
+            thisplayer+=1;
+            if(thisplayer==4) thisplayer=0;           
 
         }
     }
