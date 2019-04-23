@@ -1,17 +1,12 @@
 #include<iostream>
 #include<vector>
 #include<string>
+#include "UnoMain.cpp"
 
-using namespace std;
-struct player {
-    int score;
-    vector<string> card;
-    vector<char> number;
-    vector<char> colour; 
-};
+
 void sumscore(vector<player> playerpool){
     for(int j=0; j<playerpool.size(); j++){
-        int sum=0;
+        int sum=0, score=0;
         for(int i=0; i<playerpool[j].card.size(); i++){
             string x = playerpool[j].card[i].substr(2);
             if(x == "0") sum = 0;
@@ -29,7 +24,24 @@ void sumscore(vector<player> playerpool){
             if(x == "+2") sum = 20;
             if(x == "Wild") sum = 50;
             if(x == "Wild4") sum = 50;
-            playerpool[j].score += sum;
+            score += sum;
         }
+        playerpool[j].score += score;
+        cout << "Player "<< j+1 << "'s score = " << score;
+        cout << "Player "<< j+1 << "'s total score = " << playerpool[j].score;
+
     }
 }
+
+void totalscore(vector<player> playerpool){
+    for(int j=0; j<playerpool.size(); j++){
+        for(int i=0; i<playerpool[j].card.size(); i++){
+            
+        }
+        
+    }
+    
+}
+
+
+
