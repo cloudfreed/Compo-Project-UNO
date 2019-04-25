@@ -12,6 +12,10 @@ using namespace std;
 vector<string> deck,P1,P2,P3,P4;
 int nplayer=4;
 int randomnumber = 100;
+bool reverse1=1;
+//0=antiClockwise
+//1=clockwise
+
 struct player {
     int score;
     vector<string> card;
@@ -30,6 +34,12 @@ void checktable(vector<string> &);
 void showdecksize(vector<string> &);
 void showcardonhand(vector<player> &,int);
 bool checkwrong(string,string);
+
+void specialcard(string ,player &,int &,vector<string> &);
+char Choosecolour();
+void DoubleDraw(player &,vector<string> &);
+void Wild4(player &,vector<string> &);
+void Wild();
 
 int main()
 {
@@ -127,9 +137,7 @@ void cardmanager(int n,vector<string> &d){
 }
 
 void gameplay(vector<player> &pool,vector<string> &d,int n){
-    bool reverse=1;
-    //0=clockwise
-    //1=antiClockwise
+    
     vector<string> table;
     table.push_back(d.back());
     d.pop_back();
@@ -137,9 +145,9 @@ void gameplay(vector<player> &pool,vector<string> &d,int n){
     int ccard;
     bool exitt=1;
     bool x=true;
+    int nextplayer;
 
     while(exitt){
-        while(reverse){
             checktable(table);
             cout << "Player " << thisplayer <<" turn!!!"<<endl;
             do {
@@ -157,6 +165,20 @@ void gameplay(vector<player> &pool,vector<string> &d,int n){
             }
             while(x);
             if (ccard!=0) {
+                if(reverse1){
+                    if(thisplayer+1>=nplayer+1){
+                        nextplayer = 0;
+                    }
+                    else nextplayer = thisplayer+1;
+                }
+                if(!reverse1){
+                    if(thisplayer-1<=0){
+                        nextplayer = nplayer;
+                    }
+                    else nextplayer = thisplayer-1;
+                    
+                }
+                specialcard(pool[thisplayer].card[ccard-1],pool[nextplayer],thisplayer,d);
                 table.push_back(pool[thisplayer].card[ccard-1]);
                 pool[thisplayer].card.erase(pool[thisplayer].card.begin()+(ccard-1));
             }
@@ -165,10 +187,14 @@ void gameplay(vector<player> &pool,vector<string> &d,int n){
             checktable(table);
             showdecksize(d);
             showcardonhand(playerpool,nplayer);
-            thisplayer+=1;
-            if(thisplayer==(nplayer+1)) thisplayer=0;           
-
-        }
+            if(reverse1){
+                thisplayer+=1;
+                if(thisplayer==(nplayer+1)) thisplayer=0;
+            }
+            if(!reverse1){
+                thisplayer-=1;
+                if(thisplayer==0) thisplayer=(nplayer+1);
+            }
     }
 
 
@@ -187,7 +213,7 @@ void showcardonhand(vector<player> &playerpool,int nplayer){
      for(int i=0;i<=nplayer;i++){
         cout << "Card of player " <<i <<" = ";
         for(int j= 0;j<playerpool[i].card.size();j++){
-            cout << playerpool[i].card[j] << "\t";
+            cout << "["<<j+1<<"]" <<playerpool[i].card[j] << "\t";
         }
         cout <<endl;
     }
@@ -226,4 +252,43 @@ bool checkwrong(string p,string t){
         return true;}
     else {
         return false;}
+}
+
+void specialcard(string card,player &play,int &player,vector<string> &d){
+    if (card == "R:Skip"||card == "Y:Skip"||card == "G:Skip"||card == "B:Skip"){
+        player += 1; 
+    }else if (card == "R:Rev"||card == "Y:Rev"||card == "G:Rev"||card == "B:Rev"){
+        reverse1 = !reverse1;
+    }else if (card == "R:+2"||card == "Y:+2"||card == "G:+2"||card == "B:+2"){
+        DoubleDraw(play,d);
+    }else if (card == "S:Wild"){
+        //Wild();
+    }else if (card == "S:Wild4"){
+        //Wild4();
+    }
+}
+
+char Choosecolour(){
+    char colour;
+    do{
+        cout<<"Choose your colour. (R/Y/G/B) :";
+        cin>>colour;
+    }while (colour != 'R' && colour != 'Y' && colour != 'G' && colour != 'B');
+    return colour;
+}
+
+void DoubleDraw(player &play,vector<string> &d){
+    for(int j=0;j<2;j++){
+        play.card.push_back(d.back());
+        d.pop_back();
+    }
+}
+
+void Wild4(player &play,vector<string> &d){
+    for(int j=0;j<4;j++){
+        play.card.push_back(d.back());
+        d.pop_back();
+    }
+    char c;
+    c = Choosecolour();
 }
