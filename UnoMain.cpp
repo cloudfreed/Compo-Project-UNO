@@ -143,20 +143,30 @@ void gameplay(vector<player> &pool,vector<string> &d,int n){
             checktable(table);
             cout << "Player " << thisplayer <<" turn!!!"<<endl;
             do {
-                cout << "Choose your card number = ";
+                cout << "Choose your card [Number] or [0] to Draw = ";
                 cin >> ccard;
+                if(ccard==0){
+                    pool[thisplayer].card.push_back(d.back());
+                    d.pop_back();
+                    x = false;
+                }
+                else{
                 x = checkwrong(pool[thisplayer].card[ccard-1],table.back());
                 if(x) cout << "Wrong Card!!!";
+                }
             }
             while(x);
-            table.push_back(pool[thisplayer].card[ccard-1]);
-            pool[thisplayer].card[ccard-1].erase();
+            if (ccard!=0) {
+                table.push_back(pool[thisplayer].card[ccard-1]);
+                pool[thisplayer].card.erase(pool[thisplayer].card.begin()+(ccard-1));
+            }
+            
             //pool[thisplayer].card.shrink_to_fit();
             checktable(table);
             showdecksize(d);
             showcardonhand(playerpool,nplayer);
             thisplayer+=1;
-            if(thisplayer==4) thisplayer=0;           
+            if(thisplayer==(nplayer+1)) thisplayer=0;           
 
         }
     }
@@ -184,20 +194,36 @@ void showcardonhand(vector<player> &playerpool,int nplayer){
 }
 
 bool checkwrong(string p,string t){
-    char textP[p.size()+1];
-    char textT[t.size()+1];
-    strcpy(textP,p.c_str());
-    strcpy(textT,t.c_str());
-    char format[] = "%[^:]:%s";
-    char type1[1],type2[1];
-    char value1[5],value2[5];
+    //char textP[p.size()+1];
+    //char textT[t.size()+1];
+    //strcpy(textP,p.c_str());
+    //strcpy(textT,t.c_str());
+    //char format[] = "%[^:]:%s";
+    //char type1[2],type2[2];
+    //char value1[6],value2[6];
     
-    sscanf(textT,format,type1,value1);
-    sscanf(textP,format,type2,value2);
+    //sscanf(textP,format,type1,value1);
+    //sscanf(textT,format,type2,value2);
+    
+    //P is player card
+    //T is Table card
 
-    cout << textT << "  " << type1 << "  " << value1 << endl;
-    cout << textP << "  " << type2 << "  " << value2 << endl;
-    
-        
-    return false;
+    //cout << p << endl;
+    //cout << t << endl;
+    //cout << textP << "  " << type1 << "  " << value1 << endl;
+    //cout << textT << "  " << type2 << "  " << value2 << endl;
+
+    char typeP,typeT;
+    string valueP,valueT;
+
+    typeP = p[0];
+    typeT = t[0];
+
+    valueP = p.substr(2);
+    valueT = t.substr(2);
+
+    if(typeP!=typeT && valueP!=valueT){
+        return true;}
+    else {
+        return false;}
 }
