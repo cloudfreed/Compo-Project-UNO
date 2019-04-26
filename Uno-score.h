@@ -2,17 +2,18 @@
 #include<vector>
 #include<string>
 using namespace std;
+
 struct player {
     int score;
     vector<string> card;
     vector<char> number;
     vector<char> colour; 
 };
-vector<player> playerpool;
 
 
-void sumscore(vector<player> playerpool){
-    for(int j=0; j<playerpool.size(); j++){
+bool checkround(vector<player> &playerpool, int thisplayer){
+    if(playerpool[thisplayer].card.size()==0){
+        for(int j=0; j<playerpool.size(); j++){
         int sum=0, score=0;
         for(int i=0; i<playerpool[j].card.size(); i++){
             string x = playerpool[j].card[i].substr(2);
@@ -33,48 +34,46 @@ void sumscore(vector<player> playerpool){
             if(x == "Wild4") sum = 50;
             score += sum;
         }
-        playerpool[j].score += score;
-        cout << "Player "<< j+1 << "'s score = " << score;
-        cout << "Player "<< j+1 << "'s total score = " << playerpool[j].score;
-
+        playerpool[thisplayer].score += score;
+        cout << "Player "<< thisplayer << "'s score = " << score;
+        if(playerpool[thisplayer].score>=500){
+            return endgame(playerpool);
+        }
+    }
     }
 }
 
-/*bool checkwinner(vector<player> playerpool){
+
+
+
+bool endgame(vector<player> playerpool){
+    char sortplayer[4]={0,0,0,0};
     for(int i=0;i<playerpool.size();i++){
-        checkroundwinner(playerpool);
-        if(checkroundwinner(playerpool)){
-            return true; 
-        }
-        int d=playerpool[i].score;
-        if(d>=500){
-            return true;
-        }else{
-            return false;
+        int c=playerpool[i].score;
+        if(c>0){
+            sortplayer[i]=playerpool[i].number.back();
+            
         }
     }
+    int N=4;
+    for(int i=0;i<N;i++){
+        if(sortplayer[i+1]>sortplayer[i]){
+                char temp = sortplayer[i];
+                sortplayer[i] = sortplayer[i+1];
+                sortplayer[i+1] = temp;
+            }
+    }
+    cout << " The winner is Player " << sortplayer[0];
+    return true;
 }
 
-bool checkroundwinner(vector<player> playerpool[i]){
-    for(int i=0;i<playerpool.size();i++){
-        int c=playerpool[i].card.size();
-        if(c==0){
-            return true;
-            break;
-        }
-    }
-    return false;
-}*/
-
-
-
-void findwinner(vector<player> playerpool){
+/*void findwinner(vector<player> playerpool){
     string sortplayer[4];
     for(int i=0;i<playerpool.size();i++){
         sortplayer[i] = playerpool[i].number.back();
         for(int j=i+1;j<playerpool.size();j++){
             if(playerpool[j].score > playerpool[i].score){
-                sortplayer[i]=playerpool[i].number.back();
+                sortplayer[i]=playerpool[j].number.back();
             }
         }
     }
@@ -92,7 +91,9 @@ void findwinner(vector<player> playerpool){
             cout << " The second place is " << sortplayer[1] << "\n";
         }
     }
-}
+}*/
+
+
 
 
 
