@@ -1,7 +1,14 @@
 #include<iostream>
 #include<vector>
 #include<string>
-#include "UnoMain.cpp"
+using namespace std;
+struct player {
+    int score;
+    vector<string> card;
+    vector<char> number;
+    vector<char> colour; 
+};
+vector<player> playerpool;
 
 
 void sumscore(vector<player> playerpool){
@@ -33,10 +40,14 @@ void sumscore(vector<player> playerpool){
     }
 }
 
-bool checkwinner(vector<player> playerpool){
+/*bool checkwinner(vector<player> playerpool){
     for(int i=0;i<playerpool.size();i++){
-        int c=playerpool[i].score;
-        if(c>=500){
+        checkroundwinner(playerpool);
+        if(checkroundwinner(playerpool)){
+            return true; 
+        }
+        int d=playerpool[i].score;
+        if(d>=500){
             return true;
         }else{
             return false;
@@ -44,15 +55,26 @@ bool checkwinner(vector<player> playerpool){
     }
 }
 
+bool checkroundwinner(vector<player> playerpool[i]){
+    for(int i=0;i<playerpool.size();i++){
+        int c=playerpool[i].card.size();
+        if(c==0){
+            return true;
+            break;
+        }
+    }
+    return false;
+}*/
+
 
 
 void findwinner(vector<player> playerpool){
     string sortplayer[4];
     for(int i=0;i<playerpool.size();i++){
-        sortplayer[i] = playerpool[i].name;
+        sortplayer[i] = playerpool[i].number.back();
         for(int j=i+1;j<playerpool.size();j++){
             if(playerpool[j].score > playerpool[i].score){
-                sortplayer[i]=playerpool[j].name;
+                sortplayer[i]=playerpool[i].number.back();
             }
         }
     }
