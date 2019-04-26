@@ -6,6 +6,8 @@
 #include<time.h>
 #include<stdlib.h>  
 #include<cstring>
+#include<iomanip>
+#include"Uno-score.h"
 
 using namespace std;
 
@@ -35,11 +37,11 @@ void showdecksize(vector<string> &);
 void showcardonhand(vector<player> &,int);
 bool checkwrong(string,string);
 
-void specialcard(string ,player &,int &,vector<string> &);
-char Choosecolour();
-void DoubleDraw(player &,vector<string> &);
-void Wild4(player &,vector<string> &);
-void Wild();
+void specialcard(string ,player &,int &,vector<string> &,vector<string> &);
+string Choosecolour();
+void DoubleDraw(player &,vector<string> &,int &);
+void Wild(vector<string> &t);
+void Wild4(player &play,vector<string> &d,vector<string> &t,int &);
 
 int main()
 {
@@ -178,9 +180,10 @@ void gameplay(vector<player> &pool,vector<string> &d,int n){
                     else nextplayer = thisplayer-1;
                     
                 }
-                specialcard(pool[thisplayer].card[ccard-1],pool[nextplayer],thisplayer,d);
                 table.push_back(pool[thisplayer].card[ccard-1]);
+                specialcard(pool[thisplayer].card[ccard-1],pool[nextplayer],thisplayer,d,table);
                 pool[thisplayer].card.erase(pool[thisplayer].card.begin()+(ccard-1));
+                //exitt = checkwinround();
             }
             
             //pool[thisplayer].card.shrink_to_fit();
@@ -189,11 +192,11 @@ void gameplay(vector<player> &pool,vector<string> &d,int n){
             showcardonhand(playerpool,nplayer);
             if(reverse1){
                 thisplayer+=1;
-                if(thisplayer==(nplayer+1)) thisplayer=0;
+                if(thisplayer>nplayer) thisplayer=0;
             }
             if(!reverse1){
                 thisplayer-=1;
-                if(thisplayer==0) thisplayer=(nplayer+1);
+                if(thisplayer<0) thisplayer=(nplayer);
             }
     }
 
@@ -213,7 +216,7 @@ void showcardonhand(vector<player> &playerpool,int nplayer){
      for(int i=0;i<=nplayer;i++){
         cout << "Card of player " <<i <<" = ";
         for(int j= 0;j<playerpool[i].card.size();j++){
-            cout << "["<<j+1<<"]" <<playerpool[i].card[j] << "\t";
+            cout << setw(10) <<playerpool[i].card[j] <<"[" <<j+1<<"]";
         }
         cout <<endl;
     }
@@ -248,47 +251,96 @@ bool checkwrong(string p,string t){
     valueP = p.substr(2);
     valueT = t.substr(2);
 
+    if (typeP == 'S') return false;
     if(typeP!=typeT && valueP!=valueT){
         return true;}
     else {
         return false;}
 }
 
-void specialcard(string card,player &play,int &player,vector<string> &d){
+void specialcard(string card,player &play,int &player,vector<string> &d,vector<string> &t){
     if (card == "R:Skip"||card == "Y:Skip"||card == "G:Skip"||card == "B:Skip"){
-        player += 1; 
+        if (reverse1){
+            player+=1;
+            if (player >= nplayer+1){
+                player = 0;
+            }
+        if (!reverse1){
+            player -= 1;
+            if (player <= 0){
+                player = nplayer;
+            }
+        }
+        } 
     }else if (card == "R:Rev"||card == "Y:Rev"||card == "G:Rev"||card == "B:Rev"){
         reverse1 = !reverse1;
     }else if (card == "R:+2"||card == "Y:+2"||card == "G:+2"||card == "B:+2"){
-        DoubleDraw(play,d);
+        DoubleDraw(play,d,player);
     }else if (card == "S:Wild"){
-        //Wild();
+        Wild(t);
     }else if (card == "S:Wild4"){
-        //Wild4();
+        Wild4(play,d,t,player);
     }
 }
 
-char Choosecolour(){
-    char colour;
+string Choosecolour(){
+    string colour;
     do{
         cout<<"Choose your colour. (R/Y/G/B) :";
         cin>>colour;
-    }while (colour != 'R' && colour != 'Y' && colour != 'G' && colour != 'B');
+    }while (colour != "R" && colour != "Y" && colour != "G" && colour != "B");
     return colour;
 }
 
-void DoubleDraw(player &play,vector<string> &d){
+void DoubleDraw(player &play,vector<string> &d,int &player){
     for(int j=0;j<2;j++){
         play.card.push_back(d.back());
         d.pop_back();
     }
+    if (reverse1){
+            player+=1;
+            if (player >= nplayer+1){
+                player = 0;
+            }
+        if (!reverse1){
+            player -= 1;
+            if (player <= 0){
+                player = nplayer;
+            }
+        }
+        } 
 }
 
-void Wild4(player &play,vector<string> &d){
+void Wild(vector<string> &t){
+    string c;
+    c = Choosecolour();
+    string colour = t[t.size() - 2];
+    string back = colour.substr(2);
+    string newCard = c+':'+back;
+    t.push_back(newCard);
+}
+
+void Wild4(player &play,vector<string> &d,vector<string> &t,int &player){
     for(int j=0;j<4;j++){
         play.card.push_back(d.back());
         d.pop_back();
     }
-    char c;
+    if (reverse1){
+            player+=1;
+            if (player >= nplayer+1){
+                player = 0;
+            }
+        if (!reverse1){
+            player -= 1;
+            if (player <= 0){
+                player = nplayer;
+            }
+        }
+        } 
+    string c;
     c = Choosecolour();
+    string colour = t[t.size() - 2];
+    string back = colour.substr(2);
+    string newCard = c+':'+back;
+    t.push_back(newCard);
 }
